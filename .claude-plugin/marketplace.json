@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "team-market",
+  "description": "팀 공유 Claude Code 플러그인 마켓플레이스 — 무드보드 수집, 파일 정리, Playwright MCP 등 공통 도구 모음",
+  "owner": {
+    "name": "team"
+  },
+  "plugins": [
+    {
+      "name": "seren-tools",
+      "description": "Pinterest 무드보드 수집(/moodboard), Downloads 파일 자동 정리(/sort-files, /정리), Playwright MCP 포함",
+      "author": {
+        "name": "seren"
+      },
+      "source": "./plugins/seren-tools",
+      "category": "productivity"
+    }
+  ]
+}

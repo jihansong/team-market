@@ -1,0 +1,8 @@
+{
+  "name": "seren-tools",
+  "description": "Pinterest 무드보드 이미지 수집, Downloads 폴더 자동 정리, 탐색기 열기. Playwright MCP 포함.",
+  "version": "1.0.0",
+  "author": {
+    "name": "seren"
+  }
+}
