@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{ p.building_name }} ({{ p.id }})</title>
+<link rel="stylesheet" href="{{ stylesheet_url }}">
+</head>
+<body>
+<div class="listing-page">
+
+  {# --- top strip --------------------------------------------------- #}
+  <table class="listing-top">
+    <tr>
+      <td class="l-label">中古マンション</td>
+      <td class="l-price">
+        {% if p.price_jpy_man is not none %}
+          {{ '{:,.0f}'.format(p.price_jpy_man) }}<small>万円(税込)</small>
+        {% else %}—{% endif %}
+      </td>
+      <td class="l-transit">
+        {% for r in (p.station_routes or [])[:3] %}
+          <div class="t-row">
+            <span class="t-line">{{ r.line }} / {{ r.station }}駅</span>
+            <span class="t-walk">徒歩 {{ r.walk_min }}分</span>
+          </div>
+        {% endfor %}
+      </td>
+      <td class="l-name">
+        {{ p.building_name }}
+        {% if p.unit_floor %}<div class="sub">({{ p.unit_floor }}階)</div>{% endif %}
+      </td>
+      <td class="l-floor">
+        {% if p.total_floors %}{{ p.total_floors }}階建{% endif %}
+      </td>
+      <td class="l-qr">
+        {% if p.qr_url %}<img src="{{ resolve_image(p.qr_url) }}" alt="QR">{% else %}QR{% endif %}
+      </td>
+    </tr>
+  </table>
+
+  {# --- body : photos (40%) + spec table (60%) ---------------------- #}
+  <div class="listing-body">
+
+    <div class="photo-grid">
+      {% set hero = (p.photos or {}).floorplan or ((p.photos or {}).exterior or [None])[0] %}
+      <div class="hero-cell">
+        {% if hero %}<img src="{{ resolve_image(hero) }}" alt="hero">{% endif %}
+        {% if p.tagline %}<div class="tagline">{{ p.tagline }}</div>{% endif %}
+      </div>
+
+      {% set thumbs = ((p.photos or {}).interior or []) + (((p.photos or {}).exterior or [])[1:]) %}
+      <div class="thumb-row">
+        {% for img in thumbs[:6] %}
+          <div class="thumb-cell"><img src="{{ resolve_image(img) }}" alt="i{{ loop.index }}"></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th rowspan="2" class="group">住居</th>
+        <td class="label">住居表示</td>
+        <td colspan="3">{{ p.address or '' }}</td>
+      </tr>
+      <tr>
+        <td class="label">用途地域</td>
+        <td colspan="3">{{ p.use_zone or '' }}</td>
+      </tr>
+
+      <tr>
+        <th rowspan="2" class="group">土地</th>
+        <td class="label">土地権利</td>
+        <td>{{ p.land_rights or '' }}</td>
+        <td class="label">敷地面積</td>
+        <td>{% if p.land_area_m2 %}{{ p.land_area_m2 }}㎡{% endif %}</td>
+      </tr>
+      <tr>
+        <td class="label">土地共有持分</td>
+        <td colspan="3">{{ p.land_share or '' }}</td>
+      </tr>
+
+      <tr>
+        <th rowspan="3" class="group">建物</th>
+        <td class="label">専有面積</td>
+        <td>{% if p.area_m2 %}壁芯 {{ p.area_m2 }}㎡{% endif %}</td>
+        <td class="label">バルコニー</td>
+        <td>{% if p.balcony_m2 %}{{ p.balcony_m2 }}㎡{% endif %}</td>
+      </tr>
+      <tr>
+        <td class="label">方向</td>
+        <td>{{ p.direction or '' }}</td>
+        <td class="label">総階数</td>
+        <td>{% if p.total_floors %}地上 {{ p.total_floors }}階{% endif %}</td>
+      </tr>
+      <tr>
+        <td class="label">築年月</td>
+        <td>{{ p.built_yearmonth or '' }}</td>
+        <td class="label">構造</td>
+        <td>{{ p.structure or '' }}</td>
+      </tr>
+
+      <tr>
+        <th rowspan="2" class="group">費用</th>
+        <td class="label">管理費</td>
+        <td>{% if p.mgmt_fee_jpy %}{{ '{:,}'.format(p.mgmt_fee_jpy|int) }}円/月{% endif %}</td>
+        <td class="label">修繕積立金</td>
+        <td>{% if p.repair_reserve_jpy %}{{ '{:,}'.format(p.repair_reserve_jpy|int) }}円/月{% endif %}</td>
+      </tr>
+      <tr>
+        <td class="label">その他費用</td>
+        <td>{% if p.other_fee_jpy %}{{ '{:,}'.format(p.other_fee_jpy|int) }}円/月{% endif %}</td>
+        <td class="label">合計</td>
+        {% set total_fee = (p.mgmt_fee_jpy or 0) + (p.repair_reserve_jpy or 0) + (p.other_fee_jpy or 0) %}
+        <td>{% if total_fee %}{{ '{:,}'.format(total_fee|int) }}円/月{% endif %}</td>
+      </tr>
+
+      <tr>
+        <th rowspan="2" class="group">その他</th>
+        <td class="label">管理会社</td>
+        <td>{{ p.mgmt_company or '' }}</td>
+        <td class="label">施工会社</td>
+        <td>{{ p.builder or '' }}</td>
+      </tr>
+      <tr>
+        <td class="label">管理形態</td>
+        <td>{{ p.mgmt_form or '' }}</td>
+        <td class="label">分譲会社</td>
+        <td>{{ p.developer or '' }}</td>
+      </tr>
+
+      <tr>
+        <th class="group">現状</th>
+        <td class="label">現状</td>
+        <td>{{ p.status or '' }}</td>
+        <td class="label">引渡</td>
+        <td>{{ p.handover or '' }}</td>
+      </tr>
+
+      <tr>
+        <th class="group">備考</th>
+        <td colspan="4" class="remarks">{{ p.remarks or '' }}</td>
+      </tr>
+    </table>
+  </div>
+
+  {# --- footer (brand / contact / address) -------------------------- #}
+  <div class="listing-foot">
+    <div class="brand">
+      <span class="logo-dot"></span>
+      <span>STARTS</span>
+    </div>
+    <div>
+      <strong>스타츠인터내셔날코리아㈜</strong>
+    </div>
+    <div class="contact">
+      T: 02-779-8349 (직통)&nbsp;&nbsp; 02-779-8170 (대표)<br>
+      E: korea@startskorea.co.kr<br>
+      〒06253 서울특별시 강남구 강남대로 308 랜드마크타워 15층
+    </div>
+  </div>
+</div>
+</body>
+</html>

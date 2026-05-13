@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{ r.title }}</title>
+<link rel="stylesheet" href="{{ stylesheet_url }}">
+</head>
+<body>
+
+{% macro page_header(title, subtitle, accent) -%}
+<div class="a-header">
+  <div>
+    <div class="h-title">{{ title }}</div>
+    <div class="h-sub">{{ subtitle }}</div>
+  </div>
+  <div class="h-accent">{{ accent or '' }}</div>
+</div>
+{%- endmacro %}
+
+{% macro page_footer(pgnum) -%}
+<div class="a-footer">
+  <div>{{ r.source_line or '' }}</div>
+  <div>{{ pgnum }}</div>
+</div>
+{%- endmacro %}
+
+{% macro pmap(pid) -%}{{ props_by_id.get(pid, {}) }}{%- endmacro %}
+
+{# ============================================================== #}
+{# Page 1: Executive Cover                                         #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header(r.title, r.subtitle or 'Executive Package', r.header_accent) }}
+  <div class="a-body">
+    <h1 class="cover-title">{{ r.cover_headline or '지역성, 학군, 상업성, 임대 안정성을 동시에 검토' }}</h1>
+    <div class="cover-subtitle">
+      대상: {{ (r.regions or []) | join(', ') }}
+    </div>
+
+    <div class="cover-cards">
+      <div class="kard accent-red">
+        <h3>핵심 결론</h3>
+        <p>{{ r.executive_summary or '' }}</p>
+        <span class="accent-bar"></span>
+      </div>
+      <div class="kard accent-teal">
+        <h3>최우선 후보</h3>
+        <p>{{ r.executive_top_pick or '' }}</p>
+        <span class="accent-bar"></span>
+      </div>
+      <div class="kard accent-blue">
+        <h3>투자 기준</h3>
+        <p>{{ r.priority_criteria or '' }}</p>
+        <span class="accent-bar"></span>
+      </div>
+    </div>
+
+    <div class="hero-row">
+      {% for pid in (r.top3 or [])[:3] %}
+        {% set p = props_by_id.get(pid, {}) %}
+        <div class="ph-card">
+          <div class="thumb">
+            {% set hero = (p.get('photos') or {}).get('floorplan') or ((p.get('photos') or {}).get('exterior') or [None])[0] %}
+            {% if hero %}<img src="{{ resolve_image(hero) }}" alt="{{ p.get('building_name','') }}">{% endif %}
+          </div>
+          <h4>{{ p.get('id','') }} {{ p.get('building_name','') }}</h4>
+          <div class="meta">
+            {{ p.get('district','') }} / {{ p.get('layout','') }} /
+            {{ '{:.2f}'.format(p.get('area_m2', 0)) }}㎡ / ¥{{ '{:,.0f}'.format(p.get('price_jpy_man', 0)) }}m
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ page_footer(1) }}
+</div>
+
+{# ============================================================== #}
+{# Page 2: Ranking + Top 3 commentary                              #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header('우선순위 랭킹' + (r.ranking_suffix or ''), 'Investment Ranking', 'Scoring reflects family / CBD / commerce / liquidity / value') }}
+  <div class="a-body">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>#</th><th>ID</th><th>지역</th><th>타입</th>
+          <th class="num">㎡</th><th class="num">가격</th>
+          <th class="num">m/㎡</th><th class="num">점수</th><th>출처</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (a.ranking or []) %}
+          {% set p = props_by_id.get(row.id, {}) %}
+          {% set ppm = (p.get('price_jpy_man',0) / p.get('area_m2',1)) if p.get('area_m2') else 0 %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row.id }}</td>
+            <td>{{ p.get('district','') }}</td>
+            <td>{{ p.get('layout','') }}</td>
+            <td class="num">{{ '{:.1f}'.format(p.get('area_m2',0)) }}</td>
+            <td class="num">{{ '{:,.1f}'.format(p.get('price_jpy_man',0)) }}</td>
+            <td class="num">{{ '{:.2f}'.format(ppm) }}</td>
+            <td class="num">{{ '{:.1f}'.format(row.score or 0) }}</td>
+            <td>{{ row.source_page or '' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="cover-cards" style="margin-top:6mm">
+      {% for c in (a.top3_commentary or [])[:3] %}
+        <div class="kard accent-{{ c.accent or 'teal' }}">
+          <h3>{{ c.heading }}</h3>
+          <p>{{ c.body }}</p>
+          <span class="accent-bar"></span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ page_footer(2) }}
+</div>
+
+{# ============================================================== #}
+{# Page 3: Location Analysis (6 area cards)                        #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header('지역 특성 - 일본원어(영문) 표기', 'Location Analysis', 'Area positioning and demand drivers') }}
+  <div class="a-body">
+    <div class="area-grid">
+      {% for area in (a.areas or [])[:6] %}
+        <div class="kard accent-{{ area.accent or 'blue' }}">
+          <h3>{{ area.name }}</h3>
+          <p>{{ area.body }}</p>
+          <span class="accent-bar"></span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ page_footer(3) }}
+</div>
+
+{# ============================================================== #}
+{# Page 4: School / Family demand                                   #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header('학군과 패밀리 수요 관점', 'School District & Family Demand', 'School/family fit is used as a ranking overlay') }}
+  <div class="a-body">
+    <div class="sf-cards">
+      {% for c in ((a.school_family or {}).get('cards') or [])[:3] %}
+        <div class="kard accent-{{ c.accent or 'teal' }}">
+          <h3>{{ c.title }}</h3>
+          <p>{{ c.body }}</p>
+          <span class="accent-bar"></span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>지역</th><th>학군/가족</th><th>주거성</th><th>상업성</th><th>투자 해석</th></tr>
+      </thead>
+      <tbody>
+        {% for row in ((a.school_family or {}).get('matrix') or []) %}
+          <tr>
+            <td>{{ row.area }}</td>
+            <td>{{ row.family }}</td>
+            <td>{{ row.residence }}</td>
+            <td>{{ row.commerce }}</td>
+            <td>{{ row.interpret }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ page_footer(4) }}
+</div>
+
+{# ============================================================== #}
+{# Page 5: Property Universe                                       #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header('물건 유니버스 요약', 'Property Universe', 'All candidates extracted from sources') }}
+  <div class="a-body">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>ID</th><th>物件名</th><th>地域</th>
+          <th>층</th><th>타입</th>
+          <th class="num">㎡</th><th class="num">가격</th>
+          <th class="num">m/㎡</th><th class="num">Yield</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in properties %}
+          {% set ppm = (p.price_jpy_man / p.area_m2) if p.area_m2 else 0 %}
+          {% set yld = (p.implied_yield_pct) if p.implied_yield_pct is defined else None %}
+          <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.building_name }}</td>
+            <td>{{ p.district or p.ward }}</td>
+            <td>{{ (p.unit_floor ~ 'F') if p.unit_floor else '-' }}</td>
+            <td>{{ p.layout }}</td>
+            <td class="num">{{ '{:.1f}'.format(p.area_m2 or 0) }}</td>
+            <td class="num">{{ '{:,.1f}'.format(p.price_jpy_man or 0) }}</td>
+            <td class="num">{{ '{:.2f}'.format(ppm) }}</td>
+            <td class="num">{% if yld %}{{ '{:.2f}'.format(yld) }}%{% else %}-{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ page_footer(5) }}
+</div>
+
+{# ============================================================== #}
+{# Page 6: Comparative Analysis                                    #}
+{# ============================================================== #}
+<div class="a-page">
+  {{ page_header('비교 분석', 'Comparative Analysis', '1LDK and 1SLDK are pushed down unless pricing is compelling') }}
+  <div class="a-body">
+    <table class="tbl cmp-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>지역</th><th>타입</th>
+          <th class="num">㎡</th><th class="num">가격</th>
+          <th>가족</th><th>가격매력</th><th>수익</th><th>유동성</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (a.comparative_scores or []) %}
+          {% set p = props_by_id.get(row.id, {}) %}
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ p.get('district', p.get('ward','')) }}</td>
+            <td>{{ p.get('layout','') }}</td>
+            <td class="num">{{ '{:.1f}'.format(p.get('area_m2', 0)) }}</td>
+            <td class="num">{{ '{:,.1f}'.format(p.get('price_jpy_man', 0)) }}</td>
+            <td class="sc-{{ row.family or 'NA' }}">{{ row.family or 'NA' }}</td>
+            <td class="sc-{{ row.price_attractiveness or 'NA' }}">{{ row.price_attractiveness or 'NA' }}</td>
+            <td class="sc-{{ row.yield or 'NA' }}">{{ row.yield or 'NA' }}</td>
+            <td class="sc-{{ row.liquidity or 'NA' }}">{{ row.liquidity or 'NA' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if a.interpretation %}
+    <div class="interp-card">
+      <h4>해석</h4>
+      <p>{{ a.interpretation }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {{ page_footer(6) }}
+</div>
+
+{# ============================================================== #}
+{# Pages 7+: Cluster reviews (one per cluster)                     #}
+{# ============================================================== #}
+{% for cl in (a.clusters or []) %}
+<div class="a-page">
+  {{ page_header(cl.name_ja ~ ' (' ~ cl.name_ko ~ ') Cluster', 'Cluster Review', 'Cluster pros/cons and property positioning') }}
+  <div class="a-body">
+    <div class="cluster-desc">
+      <h4>지역 판단</h4>
+      <p>{{ cl.description }}</p>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>ID</th><th>物件名</th>
+          <th class="num">층</th><th>타입</th>
+          <th class="num">㎡</th><th class="num">가격</th>
+          <th class="num">m/㎡</th><th class="num">점수</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pid in (cl.members or []) %}
+          {% set p = props_by_id.get(pid, {}) %}
+          {% set ppm = (p.get('price_jpy_man',0) / p.get('area_m2',1)) if p.get('area_m2') else 0 %}
+          {% set score = (ranking_score.get(pid)) %}
+          <tr>
+            <td>{{ pid }}</td>
+            <td>{{ p.get('building_name','') }}</td>
+            <td class="num">{{ (p.get('unit_floor') ~ 'F') if p.get('unit_floor') else '-' }}</td>
+            <td>{{ p.get('layout','') }}</td>
+            <td class="num">{{ '{:.1f}'.format(p.get('area_m2', 0)) }}</td>
+            <td class="num">{{ '{:,.1f}'.format(p.get('price_jpy_man', 0)) }}</td>
+            <td class="num">{{ '{:.2f}'.format(ppm) }}</td>
+            <td class="num">{% if score is not none %}{{ '{:.1f}'.format(score) }}{% else %}-{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="hero-row" style="margin-top:6mm">
+      {% for pid in (cl.thumbs or cl.members or [])[:3] %}
+        {% set p = props_by_id.get(pid, {}) %}
+        <div class="ph-card">
+          <div class="thumb">
+            {% set hero = (p.get('photos') or {}).get('floorplan') or ((p.get('photos') or {}).get('exterior') or [None])[0] %}
+            {% if hero %}<img src="{{ resolve_image(hero) }}" alt="{{ p.get('building_name','') }}">{% endif %}
+          </div>
+          <h4>{{ pid }} {{ p.get('layout','') }} {{ '{:.1f}'.format(p.get('area_m2', 0)) }}㎡ ¥{{ '{:,.1f}'.format(p.get('price_jpy_man', 0)) }}m</h4>
+          <div class="meta">{{ p.get('building_name','') }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ page_footer(loop.index + 6) }}
+</div>
+{% endfor %}
+
+</body>
+</html>

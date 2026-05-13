@@ -12,8 +12,10 @@ __pycache__/
 # Rendered outputs
 output/
 
-# Working files derived from user-uploaded template PDFs (do not commit)
-templates/
+# Working files derived from user-uploaded template PDFs (top-level only).
+# Only the top-level /templates (rendered preview JPGs of uploaded template
+# PDFs) is excluded - render/templates/ (Jinja templates) is kept.
+/templates/
 
 # IDE
 .vscode/
