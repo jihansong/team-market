@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://osaka-research.local/properties.schema.json",
+  "title": "Osaka tower-mansion report input",
+  "type": "object",
+  "required": ["report", "properties", "analysis"],
+  "properties": {
+    "report": {
+      "type": "object",
+      "required": ["title", "subtitle"],
+      "properties": {
+        "title":              { "type": "string", "description": "Cover headline, KO" },
+        "subtitle":           { "type": "string", "description": "Smaller KO line below title" },
+        "header_accent":      { "type": "string", "description": "Yellow header right-side accent text (e.g. 'A4 Landscape PDF / 1LDK 우선순위 하향 반영')" },
+        "source_line":        { "type": "string", "description": "Footer source/disclaimer line shown on every analysis page" },
+        "regions":            { "type": "array", "items": { "type": "string" }, "description": "List of region labels printed in the cover subline" },
+        "top3":               { "type": "array", "items": { "type": "string" }, "description": "Property IDs in cover hero row" },
+        "executive_summary":  { "type": "string", "description": "Body of 핵심 결론 card" },
+        "executive_top_pick": { "type": "string", "description": "Body of 최우선 후보 card" },
+        "priority_criteria":  { "type": "string", "description": "Body of 투자 기준 card" }
+      }
+    },
+
+    "properties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "building_name", "price_jpy_man"],
+        "properties": {
+          "id":                { "type": "string", "description": "Short code, e.g. T1, A1, C3" },
+          "building_name":     { "type": "string", "description": "Japanese building name" },
+          "layout":            { "type": "string", "description": "間取り e.g. 2LDK / 3LDK+WIC" },
+          "area_m2":           { "type": "number" },
+          "balcony_m2":        { "type": "number" },
+          "direction":         { "type": "string", "description": "方向 e.g. 南東" },
+          "built_yearmonth":   { "type": "string", "description": "築年月 e.g. 2022年8月" },
+          "structure":         { "type": "string", "description": "構造 e.g. 鉄筋コンクリート造" },
+          "total_units":       { "type": "integer" },
+          "total_floors":      { "type": "integer" },
+          "unit_floor":        { "type": "integer", "description": "Floor of this unit" },
+          "address":           { "type": "string" },
+          "prefecture":        { "type": "string" },
+          "ward":              { "type": "string" },
+          "district":          { "type": "string", "description": "町 e.g. 新町 (Shinmachi)" },
+          "station_routes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "line":      { "type": "string", "description": "e.g. 大阪市堺筋線" },
+                "station":   { "type": "string" },
+                "walk_min":  { "type": "integer" }
+              }
+            },
+            "description": "Up to 3 entries shown in the listing card 交通 area"
+          },
+          "price_jpy_man":         { "type": "number", "description": "Asking price in JPY 万円" },
+          "mgmt_fee_jpy":          { "type": "number", "description": "管理費 月 yen" },
+          "repair_reserve_jpy":    { "type": "number", "description": "修繕積立金 月 yen" },
+          "other_fee_jpy":         { "type": "number", "description": "その他費用 月 yen" },
+          "parking_jpy":           { "type": "number", "description": "駐車場月額 yen if any" },
+          "builder":               { "type": "string", "description": "施工会社" },
+          "mgmt_company":          { "type": "string", "description": "管理会社" },
+          "developer":             { "type": "string", "description": "分譲会社" },
+          "mgmt_form":             { "type": "string", "description": "管理形態" },
+          "mgmt_method":           { "type": "string", "description": "管理方式" },
+          "land_rights":           { "type": "string", "description": "土地権利 e.g. 所有権" },
+          "land_share":            { "type": "string", "description": "土地共有持分" },
+          "land_area_m2":          { "type": "number", "description": "敷地面積" },
+          "use_zone":              { "type": "string", "description": "用途地域" },
+          "status":                { "type": "string", "description": "現状 e.g. 空家" },
+          "handover":              { "type": "string", "description": "引渡 e.g. 相談" },
+          "deal_type":             { "type": "string", "description": "取引態様 e.g. 専任媒介" },
+          "remarks":               { "type": "string", "description": "備考 free text, may include newlines" },
+          "features":              { "type": "string", "description": "設備 / 共有施設 free text shown left column" },
+          "tagline":               { "type": "string", "description": "Optional KO/JA tagline overlay" },
+          "photos": {
+            "type": "object",
+            "properties": {
+              "exterior":  { "type": "array", "items": { "type": "string" }, "description": "URLs or absolute file paths" },
+              "interior":  { "type": "array", "items": { "type": "string" } },
+              "floorplan": { "type": "string", "description": "Single floor-plan image URL/path" }
+            }
+          },
+          "qr_url":               { "type": "string", "description": "Pre-rendered QR PNG path or remote URL" },
+          "source_page":          { "type": "string", "description": "e.g. p.9 reference into the upstream PDF" }
+        }
+      }
+    },
+
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "ranking": {
+          "type": "array",
+          "description": "Sorted list (best first) shown on page 2",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id":            { "type": "string" },
+              "score":         { "type": "number" },
+              "source_page":   { "type": "string" }
+            }
+          }
+        },
+        "top3_commentary": {
+          "type": "array",
+          "description": "Three card bodies shown below the ranking table",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id":      { "type": "string" },
+              "heading": { "type": "string", "description": "e.g. 'Top 1: ジオタワー新町 29F'" },
+              "body":    { "type": "string" },
+              "accent":  { "type": "string", "enum": ["teal","gold","blue","red"], "default": "teal" }
+            }
+          }
+        },
+        "areas": {
+          "type": "array",
+          "description": "Up to 6 area cards on the Location Analysis page",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name":   { "type": "string", "description": "ja + ko paren e.g. '堺筋本町 (Sakaisuji-Honmachi)'" },
+              "body":   { "type": "string" },
+              "accent": { "type": "string", "enum": ["teal","gold","blue","red"], "default": "blue" }
+            }
+          }
+        },
+        "school_family": {
+          "type": "object",
+          "properties": {
+            "cards": {
+              "type": "array",
+              "description": "Three intro cards on School/family page",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title":  { "type": "string" },
+                  "body":   { "type": "string" },
+                  "accent": { "type": "string", "enum": ["teal","gold","blue","red"], "default": "teal" }
+                }
+              }
+            },
+            "matrix": {
+              "type": "array",
+              "description": "Rows for the matrix table on school/family page",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "area":       { "type": "string" },
+                  "family":     { "type": "string", "description": "높음/중상/중/보통/낮음" },
+                  "residence":  { "type": "string" },
+                  "commerce":   { "type": "string" },
+                  "interpret":  { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "comparative_scores": {
+          "type": "array",
+          "description": "Comparative analysis table rows (one per property)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id":                    { "type": "string" },
+              "family":                { "type": "string", "enum": ["High","Med","Low","NA"] },
+              "price_attractiveness":  { "type": "string", "enum": ["High","Med","Low","NA"] },
+              "yield":                 { "type": "string", "enum": ["High","Med","Low","NA"] },
+              "liquidity":             { "type": "string", "enum": ["High","Med","Low","NA"] }
+            }
+          }
+        },
+        "interpretation": { "type": "string", "description": "해석 paragraph below the comparative table" },
+        "clusters": {
+          "type": "array",
+          "description": "One page per cluster on the cluster review section",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key":        { "type": "string", "description": "machine id e.g. 'sakaisuji'" },
+              "name_ja":    { "type": "string" },
+              "name_ko":    { "type": "string", "description": "Latin transliteration paren shown next to name_ja" },
+              "description":{ "type": "string", "description": "지역 판단 card body" },
+              "members":    { "type": "array", "items": { "type": "string" }, "description": "Property IDs included in this cluster" },
+              "thumbs":     { "type": "array", "items": { "type": "string" }, "description": "Optional property IDs for the thumbnail row (defaults to first 3 of members)" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

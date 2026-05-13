@@ -1,0 +1,43 @@
+[
+  {
+    "id": "SAMPLE-A",
+    "property": {
+      "price_jpy_man": 5800,
+      "area_m2": 32.5,
+      "layout": "1LDK",
+      "monthly_rent_jpy": 195000,
+      "mgmt_fee_jpy": 11000,
+      "repair_reserve_jpy": 7500,
+      "parking_jpy": 0,
+      "vacancy_rate": 0.05
+    },
+    "loan": {"ltv": 0.70, "rate_apr": 0.025, "term_years": 30}
+  },
+  {
+    "id": "SAMPLE-B",
+    "property": {
+      "price_jpy_man": 7200,
+      "area_m2": 42.0,
+      "layout": "1LDK",
+      "monthly_rent_jpy": 235000,
+      "mgmt_fee_jpy": 14000,
+      "repair_reserve_jpy": 9000,
+      "parking_jpy": 18000,
+      "vacancy_rate": 0.05
+    },
+    "loan": {"ltv": 0.65, "rate_apr": 0.025, "term_years": 30}
+  },
+  {
+    "id": "SAMPLE-C",
+    "property": {
+      "price_jpy_man": 4800,
+      "area_m2": 28.0,
+      "layout": "1LDK",
+      "monthly_rent_jpy": 145000,
+      "mgmt_fee_jpy": 10000,
+      "repair_reserve_jpy": 7000,
+      "vacancy_rate": 0.07
+    },
+    "loan": {"ltv": 0.75, "rate_apr": 0.025, "term_years": 30}
+  }
+]

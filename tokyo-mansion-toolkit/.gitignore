@@ -1,0 +1,25 @@
+# Node / Playwright
+node_modules/
+scraper/out/
+scraper/urls.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Rendered outputs
+output/
+
+# Working files derived from user-uploaded template PDFs (do not commit)
+templates/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Local secrets / config
+.env
+.env.local

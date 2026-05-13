@@ -1,0 +1,105 @@
+{
+  "_meta": {
+    "description": "도쿄 핵심 6구의 중고 맨션 평균 가격 및 ㎡단가 벤치마크. 모든 수치는 공개 데이터·언론 보도·LIFULL HOMES 마켓 리포트에서 발췌. 개별 매물이 아닌 광역 통계.",
+    "currency_unit": "JPY 万円 (10,000 yen)",
+    "ppm_unit": "JPY 万円/㎡ (10,000 yen per square meter)",
+    "data_date": "2025년 9월 ~ 2026년 4월 (필드별 source_date 참조)",
+    "fx_assumption": "1 JPY = 9.5 KRW (참고)",
+    "method": "WebSearch로 수집된 LIFULL HOMES, mansion-review.jp 등 공개 페이지의 요약 인용. 사용자는 일본 IP에서 원문 페이지에 접근하여 분기별 최신 수치로 갱신해야 함."
+  },
+
+  "tokyo_core_6_wards_overall": {
+    "family_unit_avg_price_man_yen": 16097,
+    "family_unit_avg_price_man_yen_alt": 16940,
+    "yoy_change_pct": 52.5,
+    "comment": "도쿄 都心 6구(千代田·港·中央·新宿·渋谷·文京) 패밀리향 중고 맨션 평균 게재가격. 2025년 9월 기준 ¥1.6억 돌파, 2025년 말 ¥1.69억까지 상승.",
+    "sources": [
+      "https://lifull.com/news/45135/",
+      "https://lifull.com/news/45343/",
+      "https://lifull.com/news/46360/"
+    ],
+    "source_date": "2025-09 ~ 2025-12"
+  },
+
+  "ward_2LDK_avg_price": [
+    {
+      "ward": "千代田区",
+      "ward_en": "Chiyoda",
+      "layout": "2LDK",
+      "avg_price_man_yen": 24458,
+      "listing_count_sample": 5,
+      "source_date": "2026-04",
+      "sources": ["https://sumnara.jp/area/tokyo/chiyoda/2ldk"],
+      "in_budget_KRW_450M": false,
+      "comment": "4.5억 자기자본/LTV 75% 한도(¥143m)와 비교하면 ¥244m 평균은 1.7배 과지. 千代田区 2LDK는 후보군에서 제외 권장."
+    },
+    {
+      "ward": "港区",
+      "ward_en": "Minato",
+      "layout": "2LDK",
+      "avg_price_man_yen": 22303,
+      "listing_count_sample": 57,
+      "source_date": "2026-04",
+      "sources": ["LIFULL HOMES / mansion-review.jp 검색 인용"],
+      "in_budget_KRW_450M": false,
+      "comment": "港区 2LDK 평균 ¥223m. 가용 한도 ¥143m에서 1.55배 과지. 港区는 1LDK만 후보."
+    },
+    {
+      "ward": "中央区",
+      "ward_en": "Chuo",
+      "layout": "2LDK",
+      "avg_price_man_yen": 14836,
+      "listing_count_sample": 35,
+      "source_date": "2026-04",
+      "sources": ["LIFULL HOMES / mansion-review.jp 검색 인용"],
+      "in_budget_KRW_450M": "partial",
+      "comment": "中央区 2LDK 평균 ¥148m → 가용 한도 ¥143m와 거의 일치. 평균보다 약간 낮은 매물(특히 勝どき·晴海·月島·豊洲 fringe)이 실질 후보군."
+    }
+  ],
+
+  "ward_psm_benchmarks": [
+    {
+      "area": "千代田区 市ヶ谷駅 인근",
+      "psm_man_yen": 285,
+      "source_date": "2025-2026",
+      "sources": ["LIFULL HOMES 검색 인용"],
+      "comment": "도쿄 최상위 ㎡단가의 한 예. 50㎡ 1LDK = ¥142.5m 수준."
+    },
+    {
+      "area": "千代田区 半蔵門駅 인근",
+      "psm_man_yen": 277,
+      "source_date": "2025-2026",
+      "sources": ["LIFULL HOMES 검색 인용"],
+      "comment": "番町·麹町 학군 프리미엄 반영. 50㎡ 1LDK = ¥138.5m."
+    }
+  ],
+
+  "implied_unit_price_calc_at_psm": {
+    "_note": "위 ㎡단가에 면적을 곱한 단순 산출. 실제 매물은 층·향·연식·관리상태 등에 따라 ±20% 이상 변동.",
+    "scenarios": [
+      {"area_m2": 35, "layout": "1LDK", "psm_max_for_143m": 408, "comment": "1LDK 35㎡ - ¥143m 한도 = ¥408만/㎡ 이하 매물 가능. 港区/千代田 거의 모두 들어옴."},
+      {"area_m2": 45, "layout": "1LDK", "psm_max_for_143m": 317, "comment": "1LDK 45㎡ - ¥317만/㎡ 이하. 港区 외곽·千代田 외곽·中央 핵심·渋谷·新宿."},
+      {"area_m2": 55, "layout": "1LDK", "psm_max_for_143m": 260, "comment": "1LDK 55㎡ - ¥260만/㎡ 이하. 中央·渋谷·新宿·文京 일부."},
+      {"area_m2": 60, "layout": "2LDK", "psm_max_for_143m": 238, "comment": "2LDK 60㎡ - ¥238만/㎡ 이하. 中央(晴海·勝どき)·新宿 외곽·文京·目黒 일부."},
+      {"area_m2": 65, "layout": "2LDK", "psm_max_for_143m": 220, "comment": "2LDK 65㎡ - ¥220만/㎡ 이하. 中央 베이·新宿 외곽·文京·目黒·品川."},
+      {"area_m2": 70, "layout": "2LDK", "psm_max_for_143m": 204, "comment": "2LDK 70㎡ - ¥204만/㎡ 이하. 中央 베이·文京·目黒·品川(non-prime)."}
+    ]
+  },
+
+  "budget_envelope_summary": {
+    "equity_krw": 450000000,
+    "fx_jpy_to_krw": 9.5,
+    "equity_jpy": 47368421,
+    "ltv_60_max_price_jpy_M": 109,
+    "ltv_70_max_price_jpy_M": 130,
+    "ltv_75_max_price_jpy_M": 143,
+    "acq_cost_ratio": 0.08,
+    "note": "max_price = equity_jpy / ((1 - LTV) + 0.08). DSCR 1.0x 통과는 별도 검증 필요(Subagent A 모델)."
+  },
+
+  "warnings": [
+    "이 벤치마크는 광역 통계입니다. 매물별 실가격은 ±20-40% 분산이 발생합니다.",
+    "2026년 5월 시점 도쿄 핵심 6구는 강한 상승 사이클이라 평균이 가파르게 오르는 중. 최신 분기 데이터로 갱신 필수.",
+    "가용 한도 ¥143m은 LTV 75% 최대 케이스. 일본 비거주자(외국인) 대출은 보통 LTV 50-60%가 일반적이며, 일본 거주 영주권자/배우자/취업비자는 70-80%까지 가능. 사용자의 신분과 차주 자격을 사전 확인 필요."
+  ]
+}

@@ -1,0 +1,23 @@
+# urls.example.txt
+# -----------------------------------------------------------------------------
+# Example URL list for tokyo-condo-scraper.
+# Copy this file to urls.txt and replace the lines below with REAL SUUMO / HOMES
+# property detail URLs you want to extract.
+#
+# Rules:
+#   * One URL per line.
+#   * Lines starting with `#` and blank lines are ignored.
+#   * Only suumo.jp and www.homes.co.jp are auto-detected today.
+#
+# The five lines below are DUMMY EXAMPLES — they intentionally do not resolve
+# to real listings. Replace them before running.
+# -----------------------------------------------------------------------------
+
+# --- SUUMO 中古マンション (examples, not real listings) ---
+https://suumo.jp/ms/chuko/tokyo/sc_minato/nc_EXAMPLE0001/
+https://suumo.jp/ms/chuko/tokyo/sc_chuo/nc_EXAMPLE0002/
+https://suumo.jp/ms/chuko/tokyo/sc_shibuya/nc_EXAMPLE0003/
+
+# --- HOMES 中古マンション (examples, not real listings) ---
+https://www.homes.co.jp/mansion/b-EXAMPLE0001/
+https://www.homes.co.jp/mansion/b-EXAMPLE0002/

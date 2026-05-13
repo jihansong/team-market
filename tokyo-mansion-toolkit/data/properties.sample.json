@@ -1,0 +1,171 @@
+{
+  "_comment": "샘플 데이터 - 진짜 매물 아님 / SAMPLE DATA ONLY - NOT REAL LISTINGS",
+
+  "report": {
+    "title": "샘플 데이터 - 진짜 매물 아님 (오사카 타워맨션 분석 샘플)",
+    "subtitle": "Executive Package",
+    "header_accent": "A4 Landscape PDF / 샘플 렌더링",
+    "source_line": "Source: SAMPLE DATA - 진짜 매물 아님. 가격은 모두 가상의 값.",
+    "regions": ["新町 (Shinmachi)", "堺筋本町 (Sakaisuji-Honmachi)"],
+    "top3": ["S1", "S2"],
+    "executive_summary": "샘플 데이터 - 진짜 매물 아님. 본 페이지는 렌더링 검증용 카피이며 실제 투자 결론을 포함하지 않습니다. 가족 실거주와 학군 프리미엄을 동시에 충족하는 후보가 우위에 있다는 가정 문장만 들어 있습니다.",
+    "executive_top_pick": "샘플 데이터 - 진짜 매물 아님. 우선 후보 표시 예시: S1 (샘플 타워 신마치) / S2 (샘플 타워 사카이스지).",
+    "priority_criteria": "샘플 데이터 - 진짜 매물 아님. 면적, 역세권, 학군, 상업성, 임대 안정성을 함께 평가한다는 기준 문장 예시."
+  },
+
+  "properties": [
+    {
+      "id": "S1",
+      "building_name": "샘플 타워 신마치 (Sample Tower Shinmachi)",
+      "layout": "2LDK",
+      "area_m2": 65.5,
+      "balcony_m2": 8.2,
+      "direction": "南東",
+      "built_yearmonth": "2022年8月",
+      "structure": "鉄筋コンクリート造",
+      "total_units": 320,
+      "total_floors": 34,
+      "unit_floor": 21,
+      "address": "샘플 주소 - 진짜 매물 아님 / 大阪市西区新町 1-1-1",
+      "prefecture": "大阪府",
+      "ward": "西区",
+      "district": "新町 (Shinmachi)",
+      "station_routes": [
+        { "line": "大阪メトロ長堀鶴見緑地線", "station": "西大橋",   "walk_min": 3 },
+        { "line": "大阪メトロ四つ橋線",       "station": "四ツ橋",   "walk_min": 5 },
+        { "line": "大阪メトロ御堂筋線",       "station": "心斎橋",   "walk_min": 8 }
+      ],
+      "price_jpy_man": 11800,
+      "mgmt_fee_jpy": 15800,
+      "repair_reserve_jpy": 9100,
+      "other_fee_jpy": 0,
+      "parking_jpy": 25000,
+      "builder": "샘플 건설(주) - 진짜 매물 아님",
+      "mgmt_company": "샘플 관리(주)",
+      "developer": "샘플 디벨로퍼(주)",
+      "mgmt_form": "全部委託",
+      "mgmt_method": "常駐",
+      "land_rights": "所有権",
+      "land_share": "0000/9999999",
+      "land_area_m2": 5200.0,
+      "use_zone": "商業地域",
+      "status": "空家",
+      "handover": "相談",
+      "deal_type": "専任媒介",
+      "remarks": "샘플 데이터 - 진짜 매물 아님. 본 칸은 렌더 확인용 텍스트입니다. 줄바꿈도 정상적으로 출력되는지 확인하기 위한 예시 문장입니다.\n· 샘플 줄 1\n· 샘플 줄 2",
+      "features": "[샘플 공유시설]\n1F グランドエントランス / ラウンジ\n2F フィットネス / ゲストルーム\n47F スカイラウンジ / スカイアトリウム\n※ 본 항목은 샘플입니다 - 진짜 매물 아님",
+      "tagline": "【샘플 데이터 - 진짜 매물 아님】 렌더 검증용 카피 영역",
+      "photos": {
+        "exterior":  ["__PLACEHOLDER__"],
+        "interior":  ["__PLACEHOLDER__", "__PLACEHOLDER__", "__PLACEHOLDER__", "__PLACEHOLDER__"],
+        "floorplan": "__PLACEHOLDER__"
+      },
+      "qr_url": "__PLACEHOLDER__",
+      "source_page": "p.SAMPLE"
+    },
+
+    {
+      "id": "S2",
+      "building_name": "샘플 타워 사카이스지 (Sample Tower Sakaisuji)",
+      "layout": "3LDK",
+      "area_m2": 78.4,
+      "balcony_m2": 10.1,
+      "direction": "南",
+      "built_yearmonth": "2021年3月",
+      "structure": "鉄筋コンクリート造",
+      "total_units": 250,
+      "total_floors": 30,
+      "unit_floor": 18,
+      "address": "샘플 주소 - 진짜 매물 아님 / 大阪市中央区安土町 2-1-1",
+      "prefecture": "大阪府",
+      "ward": "中央区",
+      "district": "堺筋本町 (Sakaisuji-Honmachi)",
+      "station_routes": [
+        { "line": "大阪メトロ堺筋線",     "station": "堺筋本町", "walk_min": 2 },
+        { "line": "大阪メトロ中央線",     "station": "堺筋本町", "walk_min": 2 }
+      ],
+      "price_jpy_man": 13500,
+      "mgmt_fee_jpy": 18200,
+      "repair_reserve_jpy": 10500,
+      "other_fee_jpy": 0,
+      "parking_jpy": 30000,
+      "builder": "샘플 건설(주) - 진짜 매물 아님",
+      "mgmt_company": "샘플 관리(주)",
+      "developer": "샘플 디벨로퍼(주)",
+      "mgmt_form": "全部委託",
+      "mgmt_method": "常駐",
+      "land_rights": "所有権",
+      "land_share": "0000/9999999",
+      "land_area_m2": 4100.0,
+      "use_zone": "商業地域",
+      "status": "空家",
+      "handover": "相談",
+      "deal_type": "専任媒介",
+      "remarks": "샘플 데이터 - 진짜 매물 아님.",
+      "features": "[샘플 공유시설] - 진짜 매물 아님",
+      "tagline": "【샘플】 진짜 매물 아님",
+      "photos": {
+        "exterior":  ["__PLACEHOLDER__"],
+        "interior":  ["__PLACEHOLDER__", "__PLACEHOLDER__", "__PLACEHOLDER__"],
+        "floorplan": "__PLACEHOLDER__"
+      },
+      "qr_url": "__PLACEHOLDER__",
+      "source_page": "p.SAMPLE"
+    }
+  ],
+
+  "analysis": {
+    "ranking": [
+      { "id": "S1", "score": 8.4, "source_page": "p.SAMPLE" },
+      { "id": "S2", "score": 7.9, "source_page": "p.SAMPLE" }
+    ],
+    "top3_commentary": [
+      { "id": "S1", "heading": "Top 1: 샘플 타워 신마치 21F", "body": "샘플 데이터 - 진짜 매물 아님. 도심 접근성과 주거성이 모두 있고 면적이 충분하다는 가정 문장.", "accent": "teal" },
+      { "id": "S2", "heading": "Top 2: 샘플 타워 사카이스지 18F", "body": "샘플 데이터 - 진짜 매물 아님. CBD 접근성과 환금성 매력을 가정한 문장.", "accent": "gold" },
+      { "id": "S1", "heading": "Top 3: 샘플 비교군", "body": "샘플 데이터 - 진짜 매물 아님. 세 번째 카드 영역 렌더링 확인용.", "accent": "blue" }
+    ],
+    "areas": [
+      { "name": "新町 (Shinmachi)",            "body": "샘플 - 진짜 매물 아님. 본 카드는 텍스트 길이가 길어졌을 때 줄바꿈이 정상적으로 동작하는지 확인하기 위한 예시 문장입니다.", "accent": "teal" },
+      { "name": "堺筋本町 (Sakaisuji-Honmachi)", "body": "샘플 - 진짜 매물 아님. CBD형 입지 카드 예시.", "accent": "blue" },
+      { "name": "本町 (Honmachi)",              "body": "샘플 - 진짜 매물 아님. 업무 중심지 카드 예시.",   "accent": "gold" },
+      { "name": "靱本町 (Utsubo-Honmachi)",     "body": "샘플 - 진짜 매물 아님. 공원 인접 카드 예시.",   "accent": "teal" },
+      { "name": "中津・大阪梅田 (Nakatsu / Osaka-Umeda)", "body": "샘플 - 진짜 매물 아님. 광역 유동성 카드 예시.", "accent": "red" },
+      { "name": "中之島 (Nakanoshima)",         "body": "샘플 - 진짜 매물 아님. 수변 카드 예시.",       "accent": "blue" }
+    ],
+    "school_family": {
+      "cards": [
+        { "title": "학군+상업성의 최적 조합", "body": "샘플 - 진짜 매물 아님. 본 카드는 본문 영역 예시입니다.", "accent": "teal" },
+        { "title": "CBD형: 堺筋本町 / 本町",  "body": "샘플 - 진짜 매물 아님.", "accent": "blue" },
+        { "title": "梅田권: 中津・大阪梅田",   "body": "샘플 - 진짜 매물 아님.", "accent": "red" }
+      ],
+      "matrix": [
+        { "area": "新町 (Shinmachi)",            "family": "높음", "residence": "높음", "commerce": "높음",   "interpret": "샘플 해석 행 1" },
+        { "area": "堺筋本町 (Sakaisuji-Honmachi)", "family": "중",   "residence": "보통", "commerce": "높음",   "interpret": "샘플 해석 행 2" },
+        { "area": "本町 (Honmachi)",              "family": "중",   "residence": "보통", "commerce": "매우 높음","interpret": "샘플 해석 행 3" }
+      ]
+    },
+    "comparative_scores": [
+      { "id": "S1", "family": "High", "price_attractiveness": "Med",  "yield": "NA",   "liquidity": "High" },
+      { "id": "S2", "family": "Med",  "price_attractiveness": "High", "yield": "High", "liquidity": "High" }
+    ],
+    "interpretation": "샘플 데이터 - 진짜 매물 아님. 해석 영역 텍스트 렌더 검증용. 줄이 길어지면 자동 줄바꿈이 되는지 확인하기 위한 문장입니다.",
+    "clusters": [
+      {
+        "key": "shinmachi",
+        "name_ja": "新町",
+        "name_ko": "Shinmachi",
+        "description": "샘플 - 진짜 매물 아님. 클러스터 1 설명 카드 예시.",
+        "members": ["S1"],
+        "thumbs":  ["S1"]
+      },
+      {
+        "key": "sakaisuji",
+        "name_ja": "堺筋本町",
+        "name_ko": "Sakaisuji-Honmachi",
+        "description": "샘플 - 진짜 매물 아님. 클러스터 2 설명 카드 예시.",
+        "members": ["S2"],
+        "thumbs":  ["S2"]
+      }
+    ]
+  }
+}

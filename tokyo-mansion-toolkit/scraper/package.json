@@ -1,0 +1,22 @@
+{
+  "name": "tokyo-condo-scraper",
+  "version": "0.1.0",
+  "description": "Playwright scraper for SUUMO / HOMES 中古マンション detail pages. Run from a Japanese IP.",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "scrape": "./scrape.mjs"
+  },
+  "scripts": {
+    "scrape": "node scrape.mjs",
+    "scrape:example": "node scrape.mjs urls.example.txt",
+    "check": "node --check scrape.mjs",
+    "postinstall": "echo '\\nNext: npx playwright install chromium\\n'"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "playwright": "^1.56.0"
+  }
+}
