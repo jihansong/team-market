@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사카다 5법 — KOSPI · KOSDAQ 단계 진단</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="page-header">
+    <h1>사카다 5법 — 시황 단계 진단 (KOSPI · KOSDAQ)</h1>
+    <p class="subtitle">
+      혼마 무네히사의 사카다 5법(三山·三川·三空·三兵·三法)을 자동 검출해
+      현재 KOSPI/KOSDAQ이 어떤 단계(반전 시도 / 소진 임박 / 추세 지속 / 추세 재개 / 횡보)에 있는지 분류합니다.
+      임계값은 한국 지수 변동성을 고려해 설정한 휴리스틱이며, 표준 정의는 없습니다.
+    </p>
+    <div class="controls">
+      <label>기준일
+        <input type="date" id="asof-date" />
+      </label>
+      <label>조회기간(년)
+        <select id="years">
+          <option value="3">3년</option>
+          <option value="5">5년</option>
+          <option value="6" selected>6년</option>
+          <option value="10">10년</option>
+        </select>
+      </label>
+      <button id="refresh-btn">새로고침</button>
+      <span id="status" class="status"></span>
+    </div>
+  </header>
+
+  <section class="stage-grid">
+    <article class="stage-card" id="card-KOSPI">
+      <div class="stage-card-header">
+        <h2>KOSPI</h2>
+        <span class="stage-label" data-field="stage">—</span>
+      </div>
+      <p class="stage-note" data-field="note">로딩 중…</p>
+      <div class="stage-meta">
+        <div><span class="meta-key">기준일</span><span data-field="date">—</span></div>
+        <div><span class="meta-key">20일 변화</span><span data-field="ret20">—</span></div>
+        <div><span class="meta-key">60일 변화</span><span data-field="ret60">—</span></div>
+      </div>
+      <ul class="pattern-list" data-field="patterns"></ul>
+    </article>
+
+    <article class="stage-card" id="card-KOSDAQ">
+      <div class="stage-card-header">
+        <h2>KOSDAQ</h2>
+        <span class="stage-label" data-field="stage">—</span>
+      </div>
+      <p class="stage-note" data-field="note">로딩 중…</p>
+      <div class="stage-meta">
+        <div><span class="meta-key">기준일</span><span data-field="date">—</span></div>
+        <div><span class="meta-key">20일 변화</span><span data-field="ret20">—</span></div>
+        <div><span class="meta-key">60일 변화</span><span data-field="ret60">—</span></div>
+      </div>
+      <ul class="pattern-list" data-field="patterns"></ul>
+    </article>
+  </section>
+
+  <section class="chart-section">
+    <h2>KOSPI — 사카다 패턴 + 기술적 위험·돌파 레벨</h2>
+    <div id="chart-KOSPI" class="chart"></div>
+    <h3>KOSPI 위험·돌파 레벨</h3>
+    <table class="levels-table" id="levels-KOSPI"></table>
+  </section>
+
+  <section class="chart-section">
+    <h2>KOSDAQ — 사카다 패턴 + 기술적 위험·돌파 레벨</h2>
+    <div id="chart-KOSDAQ" class="chart"></div>
+    <h3>KOSDAQ 위험·돌파 레벨</h3>
+    <table class="levels-table" id="levels-KOSDAQ"></table>
+  </section>
+
+  <section class="explainer">
+    <h2>사카다 5법 — 각 법의 의미</h2>
+    <div class="explainer-grid">
+      <div class="explainer-card s1">
+        <h3>三山 (삼산) — 세 봉우리</h3>
+        <p class="kind">고점 반전 신호 · 약세 전환</p>
+        <p>상승 추세 중 비슷한 높이의 봉우리가 <b>세 번 연속</b> 형성된 후 하락. 시장이 같은 가격대에서 세 번 저항을 받으면 매수세가 소진된 상태.</p>
+        <p class="hint">매매 시사: 신규 매수 자제 · 보유 비중 점진 축소 · 목선(neckline) 이탈 시 추세 반전 확인.</p>
+      </div>
+      <div class="explainer-card s2">
+        <h3>三川 (삼천) — 세 골짜기</h3>
+        <p class="kind">저점 반전 신호 · 강세 전환</p>
+        <p>하락 추세 중 비슷한 깊이의 저점이 <b>세 번 연속</b> 형성된 후 상승. 매도세가 같은 가격대에서 세 번 먹히면 바닥이 다져진 상태. 三山의 거울상.</p>
+        <p class="hint">매매 시사: 분할 매수 진입 · 두 번째와 세 번째 골짜기 사이 고점 돌파 시 추세 전환 확인.</p>
+      </div>
+      <div class="explainer-card s3">
+        <h3>三空 (삼공) — 세 개의 갭</h3>
+        <p class="kind">추세 소진 신호 · 막바지</p>
+        <p>추세 진행 중 같은 방향의 갭(전일 종가↔당일 시가의 빈 구간)이 <b>3거래일 연속</b> 발생. 상승 三空은 매수 광기, 하락 三空은 패닉 셀링의 정점. 추세의 마지막 단계로 해석.</p>
+        <p class="hint">매매 시사: 추격 매수/매도 자제 · 단기 조정 대비 · 반대 방향 첫 큰 봉(반전 캔들)이 나오면 청산.</p>
+      </div>
+      <div class="explainer-card s4">
+        <h3>三兵 (삼병) — 세 병정</h3>
+        <p class="kind">추세 지속 신호</p>
+        <p><b>적삼병(赤三兵)</b>: 양봉이 3거래일 연속 형성되며 종가가 점진적으로 상승 → 강세 지속.<br>
+           <b>흑삼병(黑三兵)</b>: 음봉이 3거래일 연속 형성되며 종가가 하락 → 약세 지속.<br>
+           바닥 또는 천장 부근에서 등장 시 추세 시작 신호로도 해석.</p>
+        <p class="hint">매매 시사: 같은 방향 포지션 유지 또는 확대 · 추세 가속 구간 진입 가능성.</p>
+      </div>
+      <div class="explainer-card s5">
+        <h3>三法 (삼법) — 휴식과 행동</h3>
+        <p class="kind">추세 재개 신호</p>
+        <p>큰 추세 봉(예: 큰 양봉) → 작은 반대 방향 봉 <b>3개</b> (휴식·횡보) → 다시 같은 방향 큰 봉(돌파). 추세는 잠시 멈췄지만 끝나지 않았음. 휴식 후 재개 패턴.</p>
+        <p class="hint">매매 시사: 작은 횡보 봉 구간을 매수/매도 추가 기회로 활용 · 돌파 봉 확인 후 가속 진입.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>데이터: <a href="https://stooq.com" target="_blank" rel="noopener">stooq.com</a> · 일봉. 패턴 감지 로직은 휴리스틱이며 매매 신호가 아닙니다.</p>
+  </footer>
+
+  <script src="sakata.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
