@@ -227,3 +227,66 @@ a { color: var(--accent); }
   color: var(--muted);
   font-size: 12px;
 }
+
+/* ---------- Mobile responsive ---------- */
+@media (max-width: 720px) {
+  .page-header { padding: 16px 14px 10px; }
+  .page-header h1 { font-size: 17px; }
+  .subtitle { font-size: 12px; }
+
+  .stage-grid { padding: 12px 14px; grid-template-columns: 1fr; gap: 12px; }
+  .stage-card { padding: 14px 14px; }
+  .stage-card-header h2 { font-size: 14px; }
+  .stage-label { font-size: 16px; }
+  .stage-meta { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .stage-meta > div span:not(.meta-key) { font-size: 13px; }
+  .pattern-list .pname { min-width: 78px; font-size: 12px; }
+  .pattern-list .pdesc { display: none; }
+  .pattern-list .pdate { font-size: 10px; }
+
+  .chart-section { padding: 4px 14px 20px; }
+  .chart-section h2 { font-size: 14px; }
+  .chart { height: 360px; }
+
+  /* Stack the levels table as cards: hide thead, render each row as a block. */
+  .levels-table { display: block; border: 0; background: transparent; }
+  .levels-table thead { display: none; }
+  .levels-table tbody { display: block; }
+  .levels-table tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "swatch name diff"
+      "swatch price price"
+      "meaning meaning meaning";
+    gap: 4px 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .levels-table td { border: 0; padding: 0; }
+  .levels-table td:nth-child(1) { grid-area: swatch; align-self: center; }
+  .levels-table td:nth-child(2) { display: none; }
+  .levels-table td:nth-child(3) {
+    grid-area: name; font-size: 12px; color: var(--muted);
+    white-space: normal;
+  }
+  .levels-table td:nth-child(4) {
+    grid-area: price; font-size: 15px; font-weight: 600;
+  }
+  .levels-table td:nth-child(5) {
+    grid-area: diff; text-align: right; font-weight: 600; align-self: center;
+  }
+  .levels-table td:nth-child(6) {
+    grid-area: meaning; font-size: 11px; color: var(--muted);
+    padding-top: 6px; border-top: 1px dashed var(--border);
+  }
+  .levels-table .swatch { width: 22px; }
+
+  .explainer { padding: 4px 14px 20px; }
+  .explainer-grid { grid-template-columns: 1fr; }
+
+  .page-footer { padding: 14px; }
+}

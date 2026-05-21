@@ -177,7 +177,10 @@ function buildChart(divId, key, candles, events, levels) {
     line: { color: L.color, width: 1.2, dash: dashMap[L.style] || 'dot' },
   }));
 
-  const annotations = levels.map(L => ({
+  const isMobile = window.innerWidth < 720;
+
+  // On mobile we hide the right-side annotations to give the chart full width.
+  const annotations = isMobile ? [] : levels.map(L => ({
     xref: 'paper', x: 1, xanchor: 'left',
     yref: 'y', y: L.value, yanchor: 'middle',
     text: `${L.name} · ${fmtNum(L.value)} (${pct(L.diff)})`,
@@ -186,18 +189,44 @@ function buildChart(divId, key, candles, events, levels) {
     bgcolor: 'rgba(13,17,23,0.6)',
   }));
 
+  // Default zoom: last ~1 year (mobile) / ~2 years (desktop). User can drag/zoom to see more.
+  const defaultDays = isMobile ? 365 : 365 * 2;
+  const lastDateObj = new Date(lastDate);
+  const zoomStart = new Date(lastDateObj);
+  zoomStart.setDate(zoomStart.getDate() - defaultDays);
+  const zoomStartStr = zoomStart < new Date(firstDate)
+    ? firstDate : zoomStart.toISOString().slice(0, 10);
+
+  // Zoomed Y-range so candles fill the panel.
+  const visibleCandles = candles.filter(c => c.date >= zoomStartStr);
+  const yMin = Math.min(...visibleCandles.map(c => c.low)) * 0.97;
+  const yMax = Math.max(...visibleCandles.map(c => c.high)) * 1.03;
+
   const layout = {
     paper_bgcolor: '#161b22',
     plot_bgcolor: '#0d1117',
     font: { color: '#e6edf3', size: 11 },
-    margin: { l: 50, r: 220, t: 10, b: 40 },
+    margin: isMobile
+      ? { l: 48, r: 12, t: 8, b: 36 }
+      : { l: 50, r: 220, t: 10, b: 40 },
     xaxis: {
       rangeslider: { visible: false },
       gridcolor: '#2a3340',
       type: 'date',
+      range: [zoomStartStr, lastDate],
+      tickangle: 0,
+      tickfont: { size: isMobile ? 9 : 11 },
     },
-    yaxis: { gridcolor: '#2a3340' },
-    legend: { orientation: 'h', y: 1.08, x: 0, bgcolor: 'rgba(0,0,0,0)' },
+    yaxis: {
+      gridcolor: '#2a3340',
+      range: [yMin, yMax],
+      tickfont: { size: isMobile ? 9 : 11 },
+    },
+    legend: {
+      orientation: 'h', y: 1.08, x: 0,
+      bgcolor: 'rgba(0,0,0,0)',
+      font: { size: isMobile ? 9 : 11 },
+    },
     shapes,
     annotations,
     dragmode: 'pan',
