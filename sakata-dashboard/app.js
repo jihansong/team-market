@@ -1,8 +1,8 @@
 // Dashboard wiring — data fetch, detection, render.
 
 const SYMBOLS = [
-  { key: 'KOSPI',  stooq: '^kspc', label: 'KOSPI'  },
-  { key: 'KOSDAQ', stooq: '^kosdaq', label: 'KOSDAQ' },
+  { key: 'KOSPI',  csv: 'data/kospi.csv',  label: 'KOSPI'  },
+  { key: 'KOSDAQ', csv: 'data/kosdaq.csv', label: 'KOSDAQ' },
 ];
 
 const PATTERN_META = [
@@ -29,16 +29,16 @@ const PATTERN_SYMBOL = {
   sambeop:   'star',
 };
 
-async function fetchCandles(stooqSym, years) {
-  const today = new Date();
-  const start = new Date();
-  start.setFullYear(today.getFullYear() - years);
-  const fmt = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-  const url = `https://stooq.com/q/d/l/?s=${encodeURIComponent(stooqSym)}&d1=${fmt(start)}&d2=${fmt(today)}&i=d`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Stooq fetch failed: ${res.status}`);
+async function fetchCandles(csvPath, years) {
+  const res = await fetch(csvPath, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`CSV 로드 실패 (${res.status})`);
   const text = await res.text();
-  return parseStooqCsv(text);
+  const all = parseStooqCsv(text);
+  if (!years) return all;
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - years);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  return all.filter(c => c.date >= cutoffStr);
 }
 
 function parseStooqCsv(text) {
@@ -241,7 +241,7 @@ async function run() {
     try {
       status.textContent = `${sym.label} 데이터 로딩…`;
       status.className = 'status';
-      let candles = await fetchCandles(sym.stooq, years);
+      let candles = await fetchCandles(sym.csv, years);
       candles = filterByAsOf(candles, asOf);
       if (candles.length < 60) throw new Error('데이터가 60일 미만 (조회기간 늘리세요)');
 
