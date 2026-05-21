@@ -29,33 +29,50 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch KOSPI / KOSDAQ daily candles from Stooq
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install yfinance
+        run: pip install --quiet yfinance pandas
+
+      - name: Fetch KOSPI / KOSDAQ daily candles from Yahoo Finance
         run: |
           set -e
           mkdir -p sakata-dashboard/data
-          start=$(date -u -d '6 years ago' +%Y%m%d)
-          end=$(date -u +%Y%m%d)
-          for pair in "kospi:^kspc" "kosdaq:^kosdaq"; do
-            name="${pair%%:*}"
-            sym="${pair##*:}"
-            url="https://stooq.com/q/d/l/?s=${sym}&d1=${start}&d2=${end}&i=d"
-            echo "::group::fetching $name ($sym)"
-            curl -fsSL --retry 5 --retry-delay 3 --max-time 60 \
-              -A "Mozilla/5.0 (sakata-dashboard ci)" \
-              "$url" -o "sakata-dashboard/data/${name}.csv"
-            head -2 "sakata-dashboard/data/${name}.csv"
-            lines=$(wc -l < "sakata-dashboard/data/${name}.csv")
-            echo "lines: $lines"
-            if [ "$lines" -lt 100 ]; then
-              echo "::error::$name CSV too short ($lines lines) — Stooq may have rate-limited"
-              exit 1
-            fi
-            if ! head -1 "sakata-dashboard/data/${name}.csv" | grep -qi "date"; then
-              echo "::error::$name CSV missing Date header"
-              exit 1
-            fi
-            echo "::endgroup::"
-          done
+          python <<'PY'
+          import yfinance as yf
+          import pandas as pd
+          from datetime import date, timedelta
+          import sys
+
+          end = date.today()
+          start = end - timedelta(days=365 * 6 + 30)
+          targets = {"kospi": "^KS11", "kosdaq": "^KQ11"}
+
+          for name, sym in targets.items():
+              print(f"::group::fetching {name} ({sym})")
+              df = yf.download(sym, start=start.isoformat(), end=end.isoformat(),
+                               progress=False, auto_adjust=False)
+              if df is None or df.empty:
+                  print(f"::error::{name} fetch returned empty dataframe")
+                  sys.exit(1)
+              if isinstance(df.columns, pd.MultiIndex):
+                  df.columns = [c[0] for c in df.columns]
+              df = df.dropna(subset=["Open", "High", "Low", "Close"])
+              df = df[["Open", "High", "Low", "Close"]].round(4)
+              df.index.name = "Date"
+              path = f"sakata-dashboard/data/{name}.csv"
+              df.to_csv(path)
+              with open(path) as f:
+                  head = [next(f) for _ in range(2)]
+              print("".join(head).rstrip())
+              print(f"rows: {len(df)}")
+              if len(df) < 100:
+                  print(f"::error::{name} too few rows: {len(df)}")
+                  sys.exit(1)
+              print("::endgroup::")
+          PY
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
