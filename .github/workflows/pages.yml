@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
-      - claude/code-logic-analysis-cU3Wx
     paths:
       - 'sakata-dashboard/**'
       - '.github/workflows/pages.yml'
+  schedule:
+    - cron: '0 22 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -27,9 +28,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Fetch KOSPI / KOSDAQ daily candles from Stooq
+        run: |
+          set -e
+          mkdir -p sakata-dashboard/data
+          start=$(date -u -d '6 years ago' +%Y%m%d)
+          end=$(date -u +%Y%m%d)
+          for pair in "kospi:^kspc" "kosdaq:^kosdaq"; do
+            name="${pair%%:*}"
+            sym="${pair##*:}"
+            url="https://stooq.com/q/d/l/?s=${sym}&d1=${start}&d2=${end}&i=d"
+            echo "::group::fetching $name ($sym)"
+            curl -fsSL --retry 5 --retry-delay 3 --max-time 60 \
+              -A "Mozilla/5.0 (sakata-dashboard ci)" \
+              "$url" -o "sakata-dashboard/data/${name}.csv"
+            head -2 "sakata-dashboard/data/${name}.csv"
+            lines=$(wc -l < "sakata-dashboard/data/${name}.csv")
+            echo "lines: $lines"
+            if [ "$lines" -lt 100 ]; then
+              echo "::error::$name CSV too short ($lines lines) — Stooq may have rate-limited"
+              exit 1
+            fi
+            if ! head -1 "sakata-dashboard/data/${name}.csv" | grep -qi "date"; then
+              echo "::error::$name CSV missing Date header"
+              exit 1
+            fi
+            echo "::endgroup::"
+          done
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: sakata-dashboard
       - id: deployment
         uses: actions/deploy-pages@v4
+
